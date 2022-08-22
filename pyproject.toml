@@ -6,6 +6,7 @@ authors = ["Fedor Suchkov <f.suchkov@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+typer = {version = "^0.6", extras = ["all"]}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
