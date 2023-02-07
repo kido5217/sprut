@@ -1,0 +1,17 @@
+---
+version: "3.9"
+
+services:
+
+  vscode:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    user: "vscode"
+    volumes:
+      - ../.:/workspace:cached
+      - vscode-extensions:/home/vscode/.vscode-server/extensions
+    tty: true
+
+volumes:
+  vscode-extensions:
