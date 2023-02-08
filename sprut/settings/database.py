@@ -1,5 +1,6 @@
 from typing import Any
-from urllib.parse import urlparse, quote, unquote, ParseResult
+from urllib.parse import ParseResult, quote, unquote, urlparse
+
 from pydantic import root_validator
 
 from .base import APP_PREFIX, AppBaseSettings

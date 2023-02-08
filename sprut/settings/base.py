@@ -1,6 +1,5 @@
 from pydantic import BaseSettings
 
-
 APP_PREFIX: str = "sprut"
 
 
