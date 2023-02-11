@@ -16,13 +16,13 @@ class MongoDBSettings(AppBaseSettings):
     port: int = 27017
     url: Optional[str] = None
 
-    class Config:
+    class Config(AppBaseSettings.Config):
         """Pydantic-specific options."""
 
         env_prefix: str = f"{APP_PREFIX}_mongodb_"
 
     @root_validator(pre=True)
-    def parse_url(cls, values: dict[str, Any]) -> dict:
+    def parse_url(cls, values: dict[str, Any]) -> dict[str, Any]:
         if values.get("url") is not None:
             url: ParseResult = urlparse(str(values.get("url")))
 
@@ -32,14 +32,14 @@ class MongoDBSettings(AppBaseSettings):
                 values["username"] = unquote(url.username)
             if url.password is not None:
                 values["password"] = unquote(url.password)
-            if url.path is not None:
+            if url.path != "":
                 values["db_name"] = url.path.lstrip("/")
             if url.port is not None:
                 values["port"] = url.port
         return values
 
     @root_validator()
-    def generate_url(cls, values: dict[str, Any]) -> dict:
+    def generate_url(cls, values: dict[str, Any]) -> dict[str, Any]:
         if values.get("url") is None:
             quoted_username: str = quote(str(values.get("username")), safe="")
             quoted_password: str = quote(str(values.get("password")), safe="")
