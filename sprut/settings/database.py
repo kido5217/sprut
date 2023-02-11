@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from urllib.parse import ParseResult, quote, unquote, urlparse
 
 from pydantic import root_validator
@@ -14,7 +14,7 @@ class MongoDBSettings(AppBaseSettings):
     password: str = "mongopass"
     db_name: str = "sprut"
     port: int = 27017
-    url: str = None
+    url: Optional[str] = None
 
     class Config:
         """Pydantic-specific options."""
@@ -24,7 +24,7 @@ class MongoDBSettings(AppBaseSettings):
     @root_validator(pre=True)
     def parse_url(cls, values: dict[str, Any]) -> dict:
         if values.get("url") is not None:
-            url: ParseResult = urlparse(values.get("url"))
+            url: ParseResult = urlparse(str(values.get("url")))
 
             if url.hostname is not None:
                 values["hostname"] = url.hostname
@@ -41,8 +41,8 @@ class MongoDBSettings(AppBaseSettings):
     @root_validator()
     def generate_url(cls, values: dict[str, Any]) -> dict:
         if values.get("url") is None:
-            quoted_username: str = quote(values.get("username"), safe="")
-            quoted_password: str = quote(values.get("password"), safe="")
+            quoted_username: str = quote(str(values.get("username")), safe="")
+            quoted_password: str = quote(str(values.get("password")), safe="")
             values[
                 "url"
             ] = f'mongodb://{quoted_username}:{quoted_password}@{values["hostname"]}:{values["port"]}/{values["db_name"]}'
