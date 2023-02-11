@@ -23,6 +23,12 @@ class MongoDBSettings(AppBaseSettings):
 
     @root_validator(pre=True)
     def parse_url(cls, values: dict[str, Any]) -> dict[str, Any]:
+        """Split url and unquote login/password.
+
+        If url is specified, it precedes other options.
+        This behaviour may change in the future.
+        """
+
         if values.get("url") is not None:
             url: ParseResult = urlparse(str(values.get("url")))
 
@@ -40,6 +46,8 @@ class MongoDBSettings(AppBaseSettings):
 
     @root_validator()
     def generate_url(cls, values: dict[str, Any]) -> dict[str, Any]:
+        """Generate url from separate options."""
+
         if values.get("url") is None:
             quoted_username: str = quote(str(values.get("username")), safe="")
             quoted_password: str = quote(str(values.get("password")), safe="")
