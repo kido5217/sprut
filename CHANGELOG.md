@@ -10,3 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `.devcontainer` for VSCode developement
+- `isort` for import normalization and configure it to be `black`-compatible
+- `pytest-cov` and `coverage` for unittest coverage reports
+- Settings parser for `MongoDB` and corresponding tests
