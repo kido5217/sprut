@@ -3,7 +3,7 @@ import pytest
 from sprut.settings.database import MongoDBSettings
 
 
-def test_no_env_vars(no_env_vars: pytest.fixture) -> None:
+def test_no_env_vars(no_env_vars: pytest.MonkeyPatch) -> None:
     settings: MongoDBSettings = MongoDBSettings()
     assert settings.hostname == "localhost"
     assert settings.username == "mongouser"
@@ -13,7 +13,7 @@ def test_no_env_vars(no_env_vars: pytest.fixture) -> None:
     assert settings.url == "mongodb://mongouser:mongopass@localhost:27017/sprut"
 
 
-def test_env_vars_simple(env_vars_simple: pytest.fixture) -> None:
+def test_env_vars_simple(env_vars_simple: pytest.MonkeyPatch) -> None:
     settings: MongoDBSettings = MongoDBSettings()
     assert settings.hostname == "hostname-simple"
     assert settings.username == "username_simple"
@@ -27,7 +27,7 @@ def test_env_vars_simple(env_vars_simple: pytest.fixture) -> None:
 
 
 def test_env_vars_with_special_symbols(
-    env_vars_with_special_symbols: pytest.fixture,
+    env_vars_with_special_symbols: pytest.MonkeyPatch,
 ) -> None:
     settings: MongoDBSettings = MongoDBSettings()
     assert settings.hostname == "hostname-simple"
@@ -41,7 +41,7 @@ def test_env_vars_with_special_symbols(
     )
 
 
-def test_env_vars_only_url(env_vars_only_url: pytest.fixture) -> None:
+def test_env_vars_only_url(env_vars_only_url: pytest.MonkeyPatch) -> None:
     settings: MongoDBSettings = MongoDBSettings()
     assert settings.hostname == "hostname-simple"
     assert settings.username == "username_simple"
@@ -55,7 +55,7 @@ def test_env_vars_only_url(env_vars_only_url: pytest.fixture) -> None:
 
 
 def test_env_vars_only_url_with_special_symbols(
-    env_vars_only_url_with_special_symbols: pytest.fixture,
+    env_vars_only_url_with_special_symbols: pytest.MonkeyPatch,
 ) -> None:
     settings: MongoDBSettings = MongoDBSettings()
     assert settings.hostname == "hostname-simple"
@@ -70,7 +70,7 @@ def test_env_vars_only_url_with_special_symbols(
 
 
 def test_env_vars_url_and_other_settings(
-    env_vars_url_and_other_settings: pytest.fixture,
+    env_vars_url_and_other_settings: pytest.MonkeyPatch,
 ) -> None:
     settings: MongoDBSettings = MongoDBSettings()
     assert settings.hostname == "hostname-simple"

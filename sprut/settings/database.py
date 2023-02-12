@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import ParseResult, quote, unquote, urlparse
 
 from pydantic import root_validator
@@ -14,7 +14,7 @@ class MongoDBSettings(AppBaseSettings):
     password: str = "mongopass"
     db_name: str = "sprut"
     port: int = 27017
-    url: Optional[str] = None
+    url: str | None = None
 
     class Config(AppBaseSettings.Config):
         """Pydantic-specific options."""
