@@ -1,9 +1,9 @@
+import urllib.parse
 from typing import Any
-from urllib.parse import ParseResult, quote, unquote, urlparse
 
 from pydantic import root_validator
 
-from .base import APP_PREFIX, AppBaseSettings
+from sprut.settings.base import APP_PREFIX, AppBaseSettings
 
 
 class MongoDBSettings(AppBaseSettings):
@@ -30,14 +30,16 @@ class MongoDBSettings(AppBaseSettings):
         """
 
         if values.get("url") is not None:
-            url: ParseResult = urlparse(str(values.get("url")))
+            url: urllib.parse.ParseResult = urllib.parse.urlparse(
+                str(values.get("url"))
+            )
 
             if url.hostname is not None:
                 values["hostname"] = url.hostname
             if url.username is not None:
-                values["username"] = unquote(url.username)
+                values["username"] = urllib.parse.unquote(url.username)
             if url.password is not None:
-                values["password"] = unquote(url.password)
+                values["password"] = urllib.parse.unquote(url.password)
             if url.path != "":
                 values["db_name"] = url.path.lstrip("/")
             if url.port is not None:
@@ -49,8 +51,12 @@ class MongoDBSettings(AppBaseSettings):
         """Generate url from separate options."""
 
         if values.get("url") is None:
-            quoted_username: str = quote(str(values.get("username")), safe="")
-            quoted_password: str = quote(str(values.get("password")), safe="")
+            quoted_username: str = urllib.parse.quote(
+                str(values.get("username")), safe=""
+            )
+            quoted_password: str = urllib.parse.quote(
+                str(values.get("password")), safe=""
+            )
             values[
                 "url"
             ] = f'mongodb://{quoted_username}:{quoted_password}@{values["hostname"]}:{values["port"]}/{values["db_name"]}'
