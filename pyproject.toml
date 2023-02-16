@@ -7,6 +7,7 @@ authors = ["Fedor Suchkov <f.suchkov@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = {extras = ["dotenv"], version = "^1.10.4"}
+motor = "^3.1.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
@@ -15,6 +16,9 @@ mypy = "^1.0.0"
 isort = "^5.12.0"
 coverage = "^7.1.0"
 pytest-cov = "^4.0.0"
+motor-types = "^1.0.0b1"
+pytest-asyncio = "^0.20.3"
+pytest-env = "^0.8.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -25,3 +29,11 @@ profile = "black"
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+env = [
+    "SPRUT_MONGODB_HOSTNAME=mongodb",
+    "SPRUT_MONGODB_USERNAME=rootuser",
+    "SPRUT_MONGODB_PASSWORD=rootpass",
+    "SPRUT_MONGODB_DB_NAME=sprut",
+]

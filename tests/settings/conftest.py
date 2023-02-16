@@ -30,23 +30,19 @@ def env_vars_with_special_symbols(monkeypatch: MonkeyPatch) -> None:
 
 @fixture
 def env_vars_only_url(monkeypatch: MonkeyPatch) -> None:
-    url = (
-        "mongodb://username_simple:password_simple@hostname-simple:27047/db_name_simple"
-    )
+    url = "mongodb://username_simple:password_simple@hostname-simple:27047"
     monkeypatch.setenv("SPRUT_MONGODB_URL", url)
 
 
 @fixture
 def env_vars_only_url_with_special_symbols(monkeypatch: MonkeyPatch) -> None:
-    url = "mongodb://Z86YSXuWEq%2BgV%3A:%23C%5B%5DUT5pHif1G@hostname-simple:27067/db_name_simple"
+    url = "mongodb://Z86YSXuWEq%2BgV%3A:%23C%5B%5DUT5pHif1G@hostname-simple:27067"
     monkeypatch.setenv("SPRUT_MONGODB_URL", url)
 
 
 @fixture
 def env_vars_url_and_other_settings(monkeypatch: MonkeyPatch) -> None:
-    url = (
-        "mongodb://username_simple:password_simple@hostname-simple:27057/db_name_simple"
-    )
+    url = "mongodb://username_simple:password_simple@hostname-simple:27057"
     monkeypatch.setenv("SPRUT_MONGODB_URL", url)
     monkeypatch.setenv("SPRUT_MONGODB_HOSTNAME", "hostname-other")
     monkeypatch.setenv("SPRUT_MONGODB_USERNAME", "username_other")

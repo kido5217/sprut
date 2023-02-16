@@ -14,7 +14,7 @@ class MongoDBSettings(AppBaseSettings):
     password: str = "mongopass"
     db_name: str = "sprut"
     port: int = 27017
-    url: str | None = None
+    url: str = ""
 
     class Config(AppBaseSettings.Config):
         """Pydantic-specific options."""
@@ -29,7 +29,7 @@ class MongoDBSettings(AppBaseSettings):
         This behaviour may change in the future.
         """
 
-        if values.get("url") is not None:
+        if values.get("url", "") != "":
             url: urllib.parse.ParseResult = urllib.parse.urlparse(
                 str(values.get("url"))
             )
@@ -40,8 +40,6 @@ class MongoDBSettings(AppBaseSettings):
                 values["username"] = urllib.parse.unquote(url.username)
             if url.password is not None:
                 values["password"] = urllib.parse.unquote(url.password)
-            if url.path != "":
-                values["db_name"] = url.path.lstrip("/")
             if url.port is not None:
                 values["port"] = url.port
         return values
@@ -50,7 +48,7 @@ class MongoDBSettings(AppBaseSettings):
     def generate_url(cls, values: dict[str, Any]) -> dict[str, Any]:
         """Generate url from separate options."""
 
-        if values.get("url") is None:
+        if values.get("url", "") == "":
             quoted_username: str = urllib.parse.quote(
                 str(values.get("username")), safe=""
             )
@@ -59,7 +57,7 @@ class MongoDBSettings(AppBaseSettings):
             )
             values[
                 "url"
-            ] = f'mongodb://{quoted_username}:{quoted_password}@{values["hostname"]}:{values["port"]}/{values["db_name"]}'
+            ] = f'mongodb://{quoted_username}:{quoted_password}@{values["hostname"]}:{values["port"]}'
         return values
 
 
