@@ -1,4 +1,4 @@
-from pytest import fixture, MonkeyPatch
+from pytest import MonkeyPatch, fixture
 
 
 @fixture

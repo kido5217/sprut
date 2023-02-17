@@ -1,5 +1,3 @@
-from typing import Any
-
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pytest import mark
 
@@ -18,5 +16,6 @@ async def test_database_client_connection() -> None:
     """Check that client can connect to test database."""
 
     database: AsyncIOMotorDatabase = get_database()
-    result: Any = await database.command("buildinfo")
-    print(result)
+    # TODO: open PR in motor-types
+    ping: dict[str, float] = await database.command({"ping": 1})  # type: ignore
+    assert ping == {"ok": 1.0}
