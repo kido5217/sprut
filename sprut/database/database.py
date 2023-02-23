@@ -2,28 +2,29 @@ from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
 from sprut.settings.database import mongodb_settings
 
-COLLECTIONS: tuple[str, ...] = ("devices",)
+
+class Database:
+    """Database connection and data manipulation."""
+
+    COLLECTIONS: tuple[str, ...] = ("devices",)
+
+    def __init__(self, url: str, db_name: str) -> None:
+        self.client: AsyncIOMotorClient = AsyncIOMotorClient(url)
+        self.db: AsyncIOMotorDatabase = self.client[db_name]
+
+    async def create_collections(self) -> None:
+        """Create all necessary collections."""
+
+        existing_collections: list[str] = await self.db.list_collection_names()  # type: ignore
+        commections_to_create: list[str] = [
+            collection
+            for collection in self.COLLECTIONS
+            if collection not in existing_collections
+        ]
+        for collection in commections_to_create:
+            await self.db.create_collection(collection)  # type: ignore
 
 
-async def init_database(database: AsyncIOMotorDatabase) -> None:
-    existing_collections: list[str] = await database.list_collection_names()  # type: ignore
-    commections_to_create: list[str] = [
-        collection
-        for collection in COLLECTIONS
-        if collection not in existing_collections
-    ]
-    for collection in commections_to_create:
-        await database.create_collection(collection)  # type: ignore
-
-
-async def get_database(
-    url: str = mongodb_settings.url, db_name: str = mongodb_settings.db_name
-) -> AsyncIOMotorDatabase:
-    """Create instance of database object."""
-
-    client: AsyncIOMotorClient = AsyncIOMotorClient(url)
-    database: AsyncIOMotorDatabase = client[db_name]
-
-    await init_database(database)
-
-    return database
+database_connection: Database = Database(
+    url=mongodb_settings.url, db_name=mongodb_settings.db_name
+)
