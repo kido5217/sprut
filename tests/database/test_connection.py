@@ -1,14 +1,14 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pytest import mark
 
-from sprut.database.connection import Database, get_database_connection
+from sprut.database.connection import DatabaseConnection, get_database_connection
 
 
 def test_database_connection_creation() -> None:
     """Check that database connection object is created successfully."""
 
     database_connection = get_database_connection()
-    assert isinstance(database_connection, Database)
+    assert isinstance(database_connection, DatabaseConnection)
     assert isinstance(database_connection.db, AsyncIOMotorDatabase)
 
 
@@ -33,4 +33,4 @@ async def test_database_collection_creation() -> None:
     collections_in_database: list[
         str
     ] = await database_connection.db.list_collection_names()
-    assert set(collections_in_database) == Database.COLLECTIONS
+    assert set(collections_in_database) == DatabaseConnection.COLLECTIONS

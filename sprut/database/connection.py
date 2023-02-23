@@ -3,7 +3,7 @@ from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from sprut.settings.database import mongodb_settings
 
 
-class Database:
+class DatabaseConnection:
     """Database connection and data manipulation."""
 
     COLLECTIONS: set[str] = {"devices"}
@@ -27,10 +27,10 @@ class Database:
             await self.db.create_collection(collection)  # type: ignore
 
 
-def get_database_connection() -> Database:
+def get_database_connection() -> DatabaseConnection:
     """Create new database_connection."""
 
-    database_connection: Database = Database(
+    database_connection: DatabaseConnection = DatabaseConnection(
         url=mongodb_settings.url, db_name=mongodb_settings.db_name
     )
     return database_connection
