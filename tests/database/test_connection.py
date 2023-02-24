@@ -1,5 +1,5 @@
+import pytest
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from pytest import mark
 
 from sprut.database.connection import DatabaseConnection, get_database_connection
 
@@ -12,7 +12,7 @@ def test_database_connection_creation() -> None:
     assert isinstance(database_connection.db, AsyncIOMotorDatabase)
 
 
-@mark.asyncio
+@pytest.mark.asyncio
 async def test_database_client_connection() -> None:
     """Check that client can connect to test database."""
 
@@ -23,7 +23,7 @@ async def test_database_client_connection() -> None:
     assert ping == {"ok": 1.0}
 
 
-@mark.asyncio
+@pytest.mark.asyncio
 async def test_database_collection_creation() -> None:
     """Check that client can create all nesessary collections."""
 
