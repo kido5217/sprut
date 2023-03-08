@@ -1,15 +1,16 @@
-from ipaddress import IPv4Address
+from bson import ObjectId
 
-from pydantic import BaseModel
+from sprut.models.base import BaseSprutModel
+
+DeviceBaseT = dict[str, str | ObjectId | list[str] | None]
 
 
-class DeviceModel(BaseModel):
+class DeviceBase(BaseSprutModel):
     """Device general information."""
 
     name: str
-    id: str | None = None
-    oam_ip: IPv4Address | None = None
-    ldp_ip: IPv4Address | None = None
+    oam_ip: str | None = None
+    ldp_ip: str | None = None
     domain: str | None = None
     sources: list[str] | None = None
     groups: list[str] | None = None

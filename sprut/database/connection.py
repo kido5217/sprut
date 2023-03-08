@@ -1,5 +1,12 @@
-from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from bson import ObjectId
+from motor.motor_asyncio import (
+    AsyncIOMotorClient,
+    AsyncIOMotorCollection,
+    AsyncIOMotorDatabase,
+)
 
+from sprut.exceptions import DocumentExists
+from sprut.models import DeviceBase
 from sprut.settings.database import mongodb_settings
 
 
@@ -13,6 +20,7 @@ class DatabaseConnection:
 
         self.client: AsyncIOMotorClient = AsyncIOMotorClient(url)
         self.db: AsyncIOMotorDatabase = self.client[db_name]
+        self.devices: AsyncIOMotorCollection = self.db["devices"]
 
     async def create_collections(self) -> None:
         """Create all necessary collections."""
@@ -25,6 +33,16 @@ class DatabaseConnection:
         ]
         for collection in commections_to_create:
             await self.db.create_collection(collection)  # type: ignore
+
+    async def create_device(self, device: DeviceBase) -> ObjectId:
+        """Create new device in database."""
+
+        device_in_db = await self.devices.find_one({"name": device.name})
+        if device_in_db is not None:
+            raise DocumentExists(device_in_db.get("_id"))
+
+        result = await self.devices.insert_one(device.dict(exclude={"id"}))
+        return result.inserted_id
 
 
 def get_database_connection() -> DatabaseConnection:
