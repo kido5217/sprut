@@ -5,8 +5,8 @@ from motor.motor_asyncio import (
     AsyncIOMotorDatabase,
 )
 
+from sprut.database.models import DeviceModel
 from sprut.exceptions import DocumentExists
-from sprut.models import DeviceBase
 from sprut.settings.database import mongodb_settings
 
 
@@ -34,7 +34,7 @@ class DatabaseConnection:
         for collection in commections_to_create:
             await self.db.create_collection(collection)  # type: ignore
 
-    async def create_device(self, device: DeviceBase) -> ObjectId:
+    async def create_device(self, device: DeviceModel) -> ObjectId:
         """Create new device in database."""
 
         device_in_db = await self.devices.find_one({"name": device.name})

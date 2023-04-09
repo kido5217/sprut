@@ -5,22 +5,24 @@ from bson import ObjectId
 
 from sprut.database.connection import DatabaseConnection
 from sprut.exceptions import DocumentExists
-from sprut.models import DeviceBase, DeviceBaseT
+from sprut.database.models import DeviceModel
+
+DeviceModelT = dict[str, str | ObjectId | list[str] | None]
 
 
 @pytest.mark.asyncio
 async def test_create_basic(database_fresh: DatabaseConnection) -> None:
-    device_data: DeviceBaseT = {
+    device_data: DeviceModelT = {
         "name": "r1",
     }
-    device: DeviceBase = DeviceBase.parse_obj(device_data)
+    device: DeviceModel = DeviceModel.parse_obj(device_data)
     device.id = await database_fresh.create_device(device)
 
-    device_in_db: DeviceBase = DeviceBase.parse_obj(
+    device_in_db: DeviceModel = DeviceModel.parse_obj(
         await database_fresh.devices.find_one({"name": device_data["name"]})
     )
 
-    device_in_db_by_id: DeviceBase = DeviceBase.parse_obj(
+    device_in_db_by_id: DeviceModel = DeviceModel.parse_obj(
         await database_fresh.devices.find_one({"_id": device.id})
     )
 
@@ -29,7 +31,7 @@ async def test_create_basic(database_fresh: DatabaseConnection) -> None:
 
 @pytest.mark.asyncio
 async def test_create_full(database_fresh: DatabaseConnection) -> None:
-    device_data: DeviceBaseT = {
+    device_data: DeviceModelT = {
         "name": "r1",
         "oam_ip": "10.10.10.1",
         "ldp_ip": "10.1.1.1",
@@ -40,14 +42,14 @@ async def test_create_full(database_fresh: DatabaseConnection) -> None:
         "vendor": "cisco",
         "model": "7600",
     }
-    device: DeviceBase = DeviceBase.parse_obj(device_data)
+    device: DeviceModel = DeviceModel.parse_obj(device_data)
     device.id = await database_fresh.create_device(device)
 
-    device_in_db: DeviceBase = DeviceBase.parse_obj(
+    device_in_db: DeviceModel = DeviceModel.parse_obj(
         await database_fresh.devices.find_one({"name": device_data["name"]})
     )
 
-    device_in_db_by_id: DeviceBase = DeviceBase.parse_obj(
+    device_in_db_by_id: DeviceModel = DeviceModel.parse_obj(
         await database_fresh.devices.find_one({"_id": device.id})
     )
 
@@ -56,10 +58,10 @@ async def test_create_full(database_fresh: DatabaseConnection) -> None:
 
 @pytest.mark.asyncio
 async def test_exception_on_create_existing(database_fresh: DatabaseConnection) -> None:
-    device_data: DeviceBaseT = {
+    device_data: DeviceModelT = {
         "name": "r1",
     }
-    device: DeviceBase = DeviceBase.parse_obj(device_data)
+    device: DeviceModel = DeviceModel.parse_obj(device_data)
 
     await database_fresh.create_device(device)
 
